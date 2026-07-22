@@ -1,9 +1,11 @@
 package com.enterprise.auth.exception.handler;
 
 import com.enterprise.auth.dto.common.ErrorResponse;
+import com.enterprise.auth.exception.ApiException;
 import com.enterprise.auth.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -24,6 +26,24 @@ public class GlobalExceptionHandler {
             .message(ex.getMessage())
             .path(request.getRequestURI())
             .build();
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(
+        ApiException ex,
+        HttpServletRequest request) {
+
+        ErrorResponse response = ErrorResponse.builder()
+            .timestamp(Instant.now())
+            .status(ex.getStatus().value())
+            .error(ex.getStatus().getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return ResponseEntity
+            .status(ex.getStatus())
+            .body(response);
     }
 
 }
