@@ -1,8 +1,10 @@
 package com.enterprise.auth.exception;
 
-public class UnauthorizedException extends RuntimeException{
+import org.springframework.http.HttpStatus;
 
-    public UnauthorizedException(String message) {
-        super(message);
+public class UnauthorizedException extends ApiException{
+
+    public  UnauthorizedException(HttpStatus status, String message) {
+        super(status, message);
     }
 }

@@ -2,6 +2,7 @@ package com.enterprise.auth.service;
 
 import com.enterprise.auth.client.KeycloakClient;
 import com.enterprise.auth.dto.request.LoginRequest;
+import com.enterprise.auth.dto.request.LogoutRequest;
 import com.enterprise.auth.dto.request.RefreshTokenRequest;
 import com.enterprise.auth.dto.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,10 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public LoginResponse refreshToken(RefreshTokenRequest request) {
         return keycloakClient.refreshToken(request);
+    }
+
+    @Override
+    public void logout(LogoutRequest request) {
+        keycloakClient.logout(request);
     }
 }

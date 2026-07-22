@@ -2,6 +2,7 @@ package com.enterprise.auth.controller;
 
 import com.enterprise.auth.dto.common.ApiResponse;
 import com.enterprise.auth.dto.request.LoginRequest;
+import com.enterprise.auth.dto.request.LogoutRequest;
 import com.enterprise.auth.dto.request.RefreshTokenRequest;
 import com.enterprise.auth.dto.response.LoginResponse;
 import com.enterprise.auth.service.AuthService;
@@ -35,6 +36,18 @@ public class AuthController {
         return new ApiResponse<>(true,
             "Token refreshed successfully",
             response
+        );
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(
+        @Valid @RequestBody LogoutRequest request) {
+
+        authService.logout(request);
+
+        return new ApiResponse<>(true,
+            "Logout successful",
+            null
         );
     }
 }
