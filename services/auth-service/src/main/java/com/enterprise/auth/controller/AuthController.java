@@ -2,6 +2,7 @@ package com.enterprise.auth.controller;
 
 import com.enterprise.auth.dto.common.ApiResponse;
 import com.enterprise.auth.dto.request.LoginRequest;
+import com.enterprise.auth.dto.request.RefreshTokenRequest;
 import com.enterprise.auth.dto.response.LoginResponse;
 import com.enterprise.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -23,5 +24,17 @@ public class AuthController {
     public ApiResponse<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest){
         LoginResponse response = authService.login(loginRequest);
         return new ApiResponse<>(true,"Login Successful",response);
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<LoginResponse> refreshToken(
+        @Valid @RequestBody RefreshTokenRequest request) {
+
+        LoginResponse response = authService.refreshToken(request);
+
+        return new ApiResponse<>(true,
+            "Token refreshed successfully",
+            response
+        );
     }
 }
