@@ -9,9 +9,11 @@ import java.util.UUID;
 
 public interface OrganizationService {
 
-    OrganizationResponse create(CreateOrganizationRequest request);
 
-    OrganizationResponse getById(UUID id);
+    OrganizationResponse createOrganization(CreateOrganizationRequest request);
+
+    OrganizationResponse getOrganization(UUID id);
+
 
     List<OrganizationResponse> getAll();
 

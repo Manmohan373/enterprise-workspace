@@ -22,6 +22,7 @@ import jakarta.persistence.*;
 public class Organization {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, length = 100, unique = true)
