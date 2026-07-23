@@ -1,10 +1,14 @@
 package com.enterprise.user.exception.handler;
 
 import com.enterprise.user.dto.common.ErrorResponse;
+import com.enterprise.user.exception.ApiException;
 import com.enterprise.user.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 
@@ -24,6 +28,24 @@ public class GlobalExceptionHandler {
             .message(ex.getMessage())
             .path(request.getRequestURI())
             .build();
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(
+        ApiException ex,
+        HttpServletRequest request) {
+
+        ErrorResponse response = ErrorResponse.builder()
+            .timestamp(Instant.now())
+            .status(ex.getStatus().value())
+            .error(ex.getStatus().getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return ResponseEntity
+            .status(ex.getStatus())
+            .body(response);
     }
 
 }

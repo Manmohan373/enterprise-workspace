@@ -10,6 +10,11 @@ import java.util.UUID;
 public interface OrganizationRepository
     extends JpaRepository<Organization, UUID> {
 
+    boolean existsByName(String name);
+
     boolean existsByCode(String code);
+
+    boolean existsByEmail(String email);
+
 
 }
