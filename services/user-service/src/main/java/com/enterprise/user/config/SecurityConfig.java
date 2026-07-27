@@ -42,13 +42,13 @@ public class SecurityConfig {
                 ).permitAll()
 
                 .anyRequest()
-                .authenticated())
+                .permitAll());
 
-            .oauth2ResourceServer(oauth ->
-                oauth.jwt(jwt ->
-                    jwt.jwtAuthenticationConverter(
-                        new KeycloakJwtAuthenticationConverter()
-                    )));
+//            .oauth2ResourceServer(oauth ->
+//                oauth.jwt(jwt ->
+//                    jwt.jwtAuthenticationConverter(
+//                        new KeycloakJwtAuthenticationConverter()
+//                    )));
 
         return http.build();
     }

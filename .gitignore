@@ -1,14 +1,6 @@
-# IntelliJ
+# IDE
 .idea/
-*.iml
-
-# VS Code
 .vscode/
-
-# Eclipse
-.project
-.classpath
-.settings/
 
 # OS
 .DS_Store
@@ -17,18 +9,15 @@ Thumbs.db
 # Logs
 *.log
 
+# Environment
+.env
+
 # Maven
 target/
 
 # Node
 node_modules/
-
-# Angular
 dist/
 
-# Environment
-.env
-.env.*
-
 # Docker
-*.pid
+postgres_data/
