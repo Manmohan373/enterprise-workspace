@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -23,6 +24,12 @@ public interface OrganizationRepository
     boolean existsByNameAndIdNot(String name, UUID id);
 
     boolean existsByEmailAndIdNot(String email, UUID id);
+
+
+    Optional<Organization> findByIdAndStatusNot(
+        UUID id,
+        OrganizationStatus status
+    );
 
     Page<Organization> findByStatusNot(OrganizationStatus status, Pageable pageable);
 

@@ -1,17 +1,12 @@
 package com.enterprise.user.exception.handler;
 
-import com.enterprise.user.dto.common.ApiResponse;
 import com.enterprise.user.dto.common.ErrorResponse;
-import com.enterprise.user.exception.ApiException;
-import com.enterprise.user.exception.ConflictException;
-import com.enterprise.user.exception.InvalidSearchFieldException;
-import com.enterprise.user.exception.ResourceNotFoundException;
+import com.enterprise.user.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
@@ -21,18 +16,42 @@ import java.time.Instant;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFound(
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(
         ResourceNotFoundException ex,
         HttpServletRequest request) {
 
-        return ErrorResponse.builder()
-            .timestamp(Instant.now())
-            .status(HttpStatus.NOT_FOUND.value())
-            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-            .message(ex.getMessage())
-            .path(request.getRequestURI())
-            .build();
+        return buildResponse(
+            HttpStatus.NOT_FOUND,
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler({
+        ConflictException.class,
+        DuplicateResourceException.class
+    })
+    public ResponseEntity<ErrorResponse> handleConflict(
+        RuntimeException ex,
+        HttpServletRequest request) {
+
+        return buildResponse(
+            HttpStatus.CONFLICT,
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(InvalidSearchFieldException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSearchField(
+        InvalidSearchFieldException ex,
+        HttpServletRequest request) {
+
+        return buildResponse(
+            HttpStatus.BAD_REQUEST,
+            ex.getMessage(),
+            request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(ApiException.class)
@@ -40,33 +59,11 @@ public class GlobalExceptionHandler {
         ApiException ex,
         HttpServletRequest request) {
 
-        ErrorResponse response = ErrorResponse.builder()
-            .timestamp(Instant.now())
-            .status(ex.getStatus().value())
-            .error(ex.getStatus().getReasonPhrase())
-            .message(ex.getMessage())
-            .path(request.getRequestURI())
-            .build();
-
-        return ResponseEntity
-            .status(ex.getStatus())
-            .body(response);
-    }
-
-
-    @ExceptionHandler(ConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleConflict(
-        ConflictException ex,
-        HttpServletRequest request) {
-
-        return ErrorResponse.builder()
-            .timestamp(Instant.now())
-            .status(HttpStatus.CONFLICT.value())
-            .error(HttpStatus.CONFLICT.getReasonPhrase())
-            .message(ex.getMessage())
-            .path(request.getRequestURI())
-            .build();
+        return buildResponse(
+            ex.getStatus(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(Exception.class)
@@ -74,44 +71,30 @@ public class GlobalExceptionHandler {
         Exception ex,
         HttpServletRequest request) {
 
-        // Log the complete stacktrace
         log.error("Unhandled exception", ex);
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(buildErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Something went wrong. Please try again later.",
-                request.getRequestURI()));
+        return buildResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "Something went wrong. Please try again later.",
+            request.getRequestURI()
+        );
     }
 
-    private ErrorResponse buildErrorResponse(
+    private ResponseEntity<ErrorResponse> buildResponse(
         HttpStatus status,
         String message,
         String path) {
 
-        return ErrorResponse.builder()
+        ErrorResponse response = ErrorResponse.builder()
             .timestamp(Instant.now())
             .status(status.value())
             .error(status.getReasonPhrase())
             .message(message)
             .path(path)
             .build();
-    }
 
-
-    @ExceptionHandler(InvalidSearchFieldException.class)
-    public ErrorResponse handleInvalidSearchField(
-        InvalidSearchFieldException ex,
-        HttpServletRequest request
-    ) {
-
-        return ErrorResponse.builder()
-            .timestamp(Instant.now())
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message(ex.getMessage())
-            .path(request.getRequestURI())
-            .build();
+        return ResponseEntity
+            .status(status)
+            .body(response);
     }
 }
