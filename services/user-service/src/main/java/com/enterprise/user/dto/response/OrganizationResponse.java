@@ -1,5 +1,6 @@
 package com.enterprise.user.dto.response;
 
+import com.enterprise.user.entity.OrganizationStatus;
 import lombok.Builder;
 
 import java.time.Instant;
@@ -20,9 +21,9 @@ public record OrganizationResponse(
 
     String website,
 
-    String address,
+    String description,
 
-    Boolean active,
+    OrganizationStatus status,
 
     Instant createdAt,
 

@@ -1,24 +1,32 @@
 package com.enterprise.user.service;
 
+import com.enterprise.user.dto.common.SearchRequest;
+import com.enterprise.user.dto.common.SearchResponse;
 import com.enterprise.user.dto.request.CreateOrganizationRequest;
-import com.enterprise.user.dto.request.UpdateOrganizationRequest;
+import com.enterprise.user.dto.request.OrganizationUpdateRequest;
 import com.enterprise.user.dto.response.OrganizationResponse;
+import com.enterprise.user.dto.response.PageResponse;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface OrganizationService {
 
-    OrganizationResponse create(CreateOrganizationRequest request);
 
-    OrganizationResponse getById(UUID id);
+    OrganizationResponse createOrganization(CreateOrganizationRequest request);
 
-    List<OrganizationResponse> getAll();
+    OrganizationResponse getOrganization(UUID id);
 
-    OrganizationResponse update(
+
+    PageResponse<OrganizationResponse> getOrganizations(Pageable pageable);
+
+    OrganizationResponse updateOrganization(
         UUID id,
-        UpdateOrganizationRequest request);
+        OrganizationUpdateRequest request
+    );
 
-    void delete(UUID id);
+    void deleteOrganization(UUID id);
+
+    SearchResponse<OrganizationResponse> search(SearchRequest request);
 
 }

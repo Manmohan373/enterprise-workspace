@@ -3,7 +3,9 @@ package com.enterprise.auth.service;
 import com.enterprise.auth.dto.request.LoginRequest;
 import com.enterprise.auth.dto.request.LogoutRequest;
 import com.enterprise.auth.dto.request.RefreshTokenRequest;
+import com.enterprise.auth.dto.response.CurrentUserResponse;
 import com.enterprise.auth.dto.response.LoginResponse;
+import org.springframework.security.core.Authentication;
 
 public interface AuthService {
 
@@ -13,4 +15,4 @@ public interface AuthService {
 
     void logout(LogoutRequest request);
 
-}
+    CurrentUserResponse me(Authentication authentication);}
